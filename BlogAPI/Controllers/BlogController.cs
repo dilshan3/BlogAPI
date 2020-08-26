@@ -13,13 +13,41 @@ namespace BlogAPI.Controllers
     public class BlogController : ControllerBase
     {
         [HttpGet]
-        public IActionResult getBlog() {
+        public IActionResult getAllBlogs() {
 
             var blog = new Blog
             {
-                id = 1,
-                title = "First Post",
-                content = "This is my first blog post"
+                Id = 1,
+                Title = "First Post",
+                Content = "This is my first blog post"
+            };
+
+            return Ok(blog);
+        }
+
+        [HttpPost]
+        public IActionResult createBlog([FromBody])
+        {
+
+            var blog = new Blog
+            {
+                Id = 1,
+                Title = "First Post",
+                Content = "This is my first blog post"
+            };
+
+            return Ok(blog);
+        }
+
+        [HttpPut]
+        public IActionResult updateBlog([FromBody])
+        {
+
+            var blog = new Blog
+            {
+                Id = 1,
+                Title = "First Post",
+                Content = "This is my first blog post"
             };
 
             return Ok(blog);
