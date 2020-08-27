@@ -26,7 +26,7 @@ namespace BlogAPI.Controllers
             if (blogs.Count == 0)
             {
 
-                return NotFound("No blogs found");
+                return NotFound("No blog posts found");
             }
             else 
             { 
@@ -58,7 +58,9 @@ namespace BlogAPI.Controllers
 
             }
             else {
+
                 return Ok(blog);
+                
             }
             
         }
@@ -66,9 +68,42 @@ namespace BlogAPI.Controllers
         [HttpPost]
         public IActionResult CreateBlog([FromBody] Blog newBlog)
         {
+            newBlog.BlogUrl = "https://blogssite.com/" + newBlog.Title;
             _dataContext.Blogs.Add(newBlog);
             _dataContext.SaveChanges();
             return Ok(newBlog);
+        }
+
+
+        //Http method to update the blog post by adding comments
+        [Route("comment/{id}")]
+        [HttpPut]
+        public IActionResult AddComment(int Id,[FromBody] Comment AddedComment)
+        {
+            var blog = _dataContext.Blogs.Where(b => b.Id == Id).SingleOrDefault();
+
+            if (blog == null)
+            {
+                return NotFound("Blog with given ID is not found.");
+            }
+            else if (blog.Title == null || blog.Content == null)
+            {
+                if (blog.Title == null)
+                {
+                    return BadRequest("Blog post doesn't have a title.");
+                }
+                else
+                {
+                    return BadRequest("Blog post doesn't have content.");
+                }
+
+            }
+            else
+            {
+                blog.Comments.Add(AddedComment);
+                _dataContext.SaveChanges();
+                return Ok(blog.Comments.ToArray());
+            }
         }
 
         [HttpPut]
