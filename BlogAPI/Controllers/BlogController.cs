@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BlogAPI.Entity;
 using BlogAPI.DatabaseContext;
+using BlogAPI.Services;
 
 namespace BlogAPI.Controllers
 {
@@ -14,32 +15,35 @@ namespace BlogAPI.Controllers
     public class BlogController : ControllerBase
     {
         private DataContext _dataContext;
-        public BlogController(DataContext dataContext)
+        private IBlogService _blogService;
+        public BlogController(DataContext dataContext, IBlogService blogService)
         {
             _dataContext = dataContext;
+            _blogService = blogService;
         }
 
         [HttpGet]
         public IActionResult GetAllBlogs() {
 
-            var blogs = _dataContext.Blogs.ToList();
+            var blogs = _blogService.GetAllBlogPosts();
+
             if (blogs.Count == 0)
             {
 
                 return NotFound("No blog posts found");
             }
-            else 
-            { 
-                return Ok(blogs); 
+            else
+            {
+                return Ok(blogs);
             }
-                
+
         }
 
         [Route("{id}")]
         [HttpGet]
-        public IActionResult GetBlog(int Id) 
+        public IActionResult GetBlog(int Id)
         {
-            var blog=_dataContext.Blogs.Where(b => b.Id == Id).SingleOrDefault();
+            var blog = _blogService.GetBlogPost(Id);
 
             if (blog == null)
             {
@@ -59,28 +63,28 @@ namespace BlogAPI.Controllers
             }
             else {
 
+
                 return Ok(blog);
-                
+
             }
-            
+
         }
 
         [HttpPost]
         public IActionResult CreateBlog([FromBody] Blog newBlog)
         {
-            newBlog.BlogUrl = "https://blogssite.com/" + newBlog.Title;
-            _dataContext.Blogs.Add(newBlog);
-            _dataContext.SaveChanges();
-            return Ok(newBlog);
+            var blog = _blogService.CreateBlogPost(newBlog);
+            
+            return Ok(blog);
         }
 
 
         //Http method to update the blog post by adding comments
         [Route("comment/{id}")]
         [HttpPut]
-        public IActionResult AddComment(int Id,[FromBody] Comment AddedComment)
+        public IActionResult AddComment(int Id, [FromBody] Comment AddedComment)
         {
-            var blog = _dataContext.Blogs.Where(b => b.Id == Id).SingleOrDefault();
+            var blog = _blogService.GetBlogPost(Id);
 
             if (blog == null)
             {
@@ -100,30 +104,60 @@ namespace BlogAPI.Controllers
             }
             else
             {
-                blog.Comments.Add(AddedComment);
-                _dataContext.SaveChanges();
+                blog = _blogService.AddComment(blog, AddedComment);
+                
                 return Ok(blog.Comments.ToArray());
             }
         }
 
+        [Route("{Id}")]
         [HttpPut]
-        public IActionResult UpdateBlog()
+        public IActionResult UpdateBlog(int Id, [FromBody] Blog updatedBlog)
         {
 
-            var blog = new Blog
-            {
-                Id = 1,
-                Title = "First Post",
-                Content = "This is my first blog post"
-            };
+            var blog =_blogService.GetBlogPost(Id);
 
-            return Ok(blog);
+            if (blog == null)
+            {
+                return NotFound("Blog with given ID is not found.");
+            }
+            else if (blog.Title == null || blog.Content == null)
+            {
+                if (blog.Title == null)
+                {
+                    return BadRequest("Blog post doesn't have a title.");
+                }
+                else
+                {
+                    return BadRequest("Blog post doesn't have content.");
+                }
+
+            }
+            else
+            {
+                blog = _blogService.UpdateBlogPost(blog, updatedBlog);
+
+                return Ok(blog);
+            }
+
         }
 
+        [Route("{Id}")]
         [HttpDelete]
-        public IActionResult DeleteBlog() 
+        public IActionResult DeleteBlog(int Id) 
         {
-            return Ok();
+            var blog = _blogService.GetBlogPost(Id);
+
+            if (blog == null)
+            {
+                return NotFound("Blog with given ID is not found.");
+            }
+            else {
+
+                blog = _blogService.DeleteBlogPost(blog);
+
+                return Ok(blog);
+            }
         }
     }
 }

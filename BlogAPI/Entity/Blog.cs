@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,5 +21,8 @@ namespace BlogAPI.Entity
     {
         public int Id { get; set; }
         public String comment { get; set; }
+
+        [ForeignKey("Blog")]
+        public int BlogId { get; set; }
     }
 }
