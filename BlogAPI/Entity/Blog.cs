@@ -17,6 +17,7 @@ namespace BlogAPI.Entity
         public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 
+    //To add Comments to the database and link it with Blogs
     public class Comment 
     {
         public int Id { get; set; }

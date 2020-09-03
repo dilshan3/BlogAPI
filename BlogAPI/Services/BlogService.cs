@@ -34,6 +34,7 @@ namespace BlogAPI.Services
             return blog;
         }
 
+        //Method to retrieve a blog post by id
         public Blog GetBlogPost(int Id)
         {
             var b = _dataContext.Blogs.Where(b => b.Id == Id).SingleOrDefault();

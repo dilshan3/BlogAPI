@@ -22,6 +22,7 @@ namespace BlogAPI.Controllers
             _blogService = blogService;
         }
 
+        //Http method to retrieve all blogs 
         [HttpGet]
         public IActionResult GetAllBlogs() {
 
@@ -39,6 +40,7 @@ namespace BlogAPI.Controllers
 
         }
 
+        //Http method to retrieve a blog by using id
         [Route("{id}")]
         [HttpGet]
         public IActionResult GetBlog(int Id)
@@ -70,6 +72,7 @@ namespace BlogAPI.Controllers
 
         }
 
+        //Http method to create a new blog
         [HttpPost]
         public IActionResult CreateBlog([FromBody] Blog newBlog)
         {
@@ -110,6 +113,7 @@ namespace BlogAPI.Controllers
             }
         }
 
+        //Http method to update the blog post by changing blog post properties
         [Route("{Id}")]
         [HttpPut]
         public IActionResult UpdateBlog(int Id, [FromBody] Blog updatedBlog)
@@ -142,6 +146,7 @@ namespace BlogAPI.Controllers
 
         }
 
+        //Http method to delete the blog post 
         [Route("{Id}")]
         [HttpDelete]
         public IActionResult DeleteBlog(int Id) 
