@@ -48,7 +48,7 @@ namespace BlogAPI.Services
             return blogs;
         }
 
-        //Method to retrieve a blog posts based on id
+        //Method to add a comment to a blog post
         public Blog AddComment(Blog blog, Comment comment) 
         {
             comment.BlogId = blog.Id;
