@@ -28,7 +28,9 @@ namespace BlogAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Used to connect to the MS SQL server database
             services.AddDbContext<DataContext>(option => option.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            //To use blogservice to access the request methods 
             services.AddTransient<IBlogService, BlogService>();
             services.AddControllers();
         }

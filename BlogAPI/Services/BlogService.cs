@@ -25,6 +25,7 @@ namespace BlogAPI.Services
             _dataContext = datacontext;
         }
 
+        //Method to create a new blog post
         public Blog CreateBlogPost(Blog blog) 
         {
             blog.BlogUrl = "https://blogssite.com/" + blog.Title.Trim();
@@ -39,12 +40,14 @@ namespace BlogAPI.Services
             return b;
         }
 
+        //Method to retrieve all blog posts
         public List<Blog> GetAllBlogPosts() 
         {
             var blogs = _dataContext.Blogs.ToList();
             return blogs;
         }
 
+        //Method to retrieve a blog posts based on id
         public Blog AddComment(Blog blog, Comment comment) 
         {
             comment.BlogId = blog.Id;
@@ -55,6 +58,7 @@ namespace BlogAPI.Services
             return blog;
         }
 
+        //Method to delete a blog post
         public Blog DeleteBlogPost(Blog blog) 
         {
             _dataContext.Remove(blog);
@@ -62,6 +66,7 @@ namespace BlogAPI.Services
             return blog;
         }
 
+        //Method to update an existing blog post
         public Blog UpdateBlogPost(Blog blog, Blog updatedBlog)
         {
             blog.Title = updatedBlog.Title;
